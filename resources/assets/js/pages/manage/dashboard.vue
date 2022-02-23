@@ -5,6 +5,13 @@
             <div class="dashboard-hello">{{$L('欢迎您，' + userInfo.nickname)}}</div>
             <div class="dashboard-desc">{{$L('以下是你当前的任务统计数据')}}</div>
             <ul class="dashboard-block">
+                <li @click="dashboard='all'">
+                    <div class="block-title">{{$L('所有任务')}}</div>
+                    <div class="block-data">
+                        <div class="block-num">{{dashboardTask.all.length}}</div>
+                        <i class="taskfont">&#xe603;</i>
+                    </div>
+                </li>
                 <li @click="dashboard='today'">
                     <div class="block-title">{{$L('今日待完成')}}</div>
                     <div class="block-data">
@@ -87,7 +94,7 @@ export default {
             nowInterval: null,
 
             loadIng: 0,
-            dashboard: 'today',
+            dashboard: 'all',
         }
     },
 
@@ -117,6 +124,8 @@ export default {
         title() {
             const {dashboard} = this;
             switch (dashboard) {
+                case 'all':
+                    return this.$L('所有任务');
                 case 'today':
                     return this.$L('今日任务');
                 case 'overdue':
@@ -130,6 +139,9 @@ export default {
             const {dashboard} = this;
             let data = [];
             switch (dashboard) {
+                case 'all':
+                    data = this.dashboardTask.all;
+                    break
                 case 'today':
                     data = this.transforTasks(this.dashboardTask.today);
                     break

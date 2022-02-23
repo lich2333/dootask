@@ -144,9 +144,13 @@ export default {
         const overdueTasks = array.filter(task => {
             return $A.Date(task.end_at) <= todayNow;
         })
+
+        const all = array
+
         return {
             today: todayTasks,
             overdue: overdueTasks,
+            all: all,
         }
     },
 }
