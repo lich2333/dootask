@@ -130,6 +130,9 @@ export default {
             }
             return task.owner;
         }
+
+        
+
         let array = state.cacheTasks.filter(task => filterTask(task));
         let tmps = state.taskCompleteTemps.filter(task => filterTask(task, false));
         if (tmps.length > 0) {
@@ -145,7 +148,24 @@ export default {
             return $A.Date(task.end_at) <= todayNow;
         })
 
-        const all = array
+        const filterTaskForAll = (task) => {
+            if (task.archived_at) {
+                return false;
+            }
+            if (task.complete_at) {
+                return false;
+            }
+            return task.owner;
+        }
+
+        let array2 = state.cacheTasks.filter(task => filterTaskForAll(task));
+        let tmps2 = state.taskCompleteTemps.filter(task => filterTaskForAll(task, false));
+        if (tmps2.length > 0) {
+            array2 = $A.cloneJSON(array2)
+            array2.push(...tmps2);
+        }
+
+        const all = array2
 
         return {
             today: todayTasks,
