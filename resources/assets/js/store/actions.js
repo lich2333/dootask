@@ -1207,6 +1207,23 @@ export default {
         })
     },
 
+    getTaskForParent2({
+        state,
+        dispatch
+    }, data) {
+        return new Promise(function (resolve, reject) {
+            dispatch("call", {
+                    url: 'project/task/lists',
+                    data: data
+                }).then((result) => {
+                resolve(result)
+            }).catch(() => {
+                call()
+                reject()
+            })
+        })
+    },
+
     /**
      * 删除任务
      * @param state

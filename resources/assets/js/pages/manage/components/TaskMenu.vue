@@ -56,6 +56,11 @@
                                 <Icon type="md-trash" />{{$L('删除')}}
                             </div>
                         </EDropdownItem>
+                        <EDropdownItem command="copy">
+                            <div class="item hover-del">
+                                <Icon type="md-trash" />{{$L('复制')}}
+                            </div>
+                        </EDropdownItem>
                         <template v-if="colorShow">
                             <EDropdownItem v-for="(c, k) in taskColorList" :key="'c_' + k" :divided="k==0" :command="c">
                                 <div class="item">
@@ -208,12 +213,91 @@ export default {
                         this.$store.dispatch("saveTaskCompleteTemp", cacheTask)
                     })
                     break;
-
+                case 'copy':
+                    this.copyTask();
+                    // console.log(this)
+                    break;
                 case 'archived':
                 case 'remove':
                     this.archivedOrRemoveTask(command);
                     break;
             }
+        },
+
+        async copyTask() {
+            if (this.loadIng) {
+                console.error('任务没有加载完不允许复制');
+                return;
+            }
+            var re = await this.$store.dispatch('getTaskOne', {
+                task_id:this.task.id,
+                archived: 'all'
+            });
+            var re2 =await this.$store.dispatch("getTaskForParent2", {
+                parent_id:this.task.id,
+                archived: 'all'
+            }).catch((arg,msg)=>{
+                console.error(arg,msg)
+            });
+            console.log(re)
+            console.log(re2)
+
+            var getOwnerData = function(list){
+                list = list || [];
+                var re = [];
+                for (var i = 0 , len = list.length; i < len; i++) {
+                    var obj = list[i];
+                    re.push(obj.userid)
+                }
+                return re;
+            }
+
+            var owner = getOwnerData(re.data.task_user);
+            var subtasks = [];
+            var list = re2.data.data || [];
+            for (var i = 0 , len = list.length; i < len; i++) {
+                var obj = list[i];
+                var name = obj.name;
+                var suOwenr = getOwnerData(obj.task_user);
+                var subTimes = [];
+                if (obj.start_at) {
+                    subTimes.push(obj.start_at);
+                }
+                if (obj.end_at) {
+                    subTimes.push(obj.end_at);
+                }
+                subtasks.push({name:name,owner:suOwenr,times:subTimes})
+            }
+            var owner = getOwnerData(re.data.task_user);
+            var times = [];
+            if (re.data.start_at) {
+                times.push(re.data.start_at);
+            }
+            if (re.data.end_at) {
+                times.push(re.data.end_at);
+            }
+            var addData = {
+                    name: re.data.name+'副本',
+                    content: re.data.desc,
+                    owner: owner,
+                    project_id:re.data.project_id,
+                    
+                    column_id: re.data.column_id,
+                    
+                    p_level: re.data.p_level,
+                    p_name: re.data.p_name,
+                    p_color: re.data.p_color,
+                    add_assist: 1,
+                    cascader: [re.data.project_id,re.data.column_id],
+                    times: times,
+                    subtasks: subtasks,
+                };
+            console.log(addData)
+            this.$store.dispatch("taskAdd", addData).then(({msg}) => {
+                $A.messageSuccess(msg);
+            }).catch(({msg}) => {
+                $A.modalError(msg);
+            });
         },
 
         visibleChange(visible) {
