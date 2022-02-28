@@ -991,6 +991,12 @@ export default {
                 project_ids.push(state.cacheTasks[index].project_id)
                 state.cacheTasks.splice(index, 1);
             }
+            //父任务被删除，子任务就应该一起移除
+            let index2 = state.cacheTasks.findIndex(task => task.parent_id == id);
+            if (index2 > -1) {
+                project_ids.push(state.cacheTasks[index2].project_id)
+                state.cacheTasks.splice(index2, 1);
+            }
         })
         Array.from(new Set(parent_ids)).some(id => dispatch("getTaskOne", id).catch(() => {}))
         Array.from(new Set(project_ids)).some(id => dispatch("getProjectOne", id).catch(() => {}))
