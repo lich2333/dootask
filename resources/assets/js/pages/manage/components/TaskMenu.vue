@@ -252,7 +252,6 @@ export default {
                 return re;
             }
 
-            var owner = getOwnerData(re.data.task_user);
             var subtasks = [];
             var list = re2.data.data || [];
             for (var i = 0 , len = list.length; i < len; i++) {
@@ -275,6 +274,9 @@ export default {
             }
             if (re.data.end_at) {
                 times.push(re.data.end_at);
+            }
+            if(owner.length == 0){
+                owner.push(this.$store.state.userId)
             }
             var addData = {
                     name: re.data.name+'副本',
