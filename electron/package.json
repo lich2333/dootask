@@ -39,32 +39,35 @@
         "electron-builder": "^22.14.13"
     },
     "dependencies": {
-        "adm-zip": "^0.5.9",
         "axios": "^0.26.0",
         "crc": "^3.8.0",
         "electron-squirrel-startup": "^1.0.0",
         "electron-log": "^4.4.6",
+        "electron-updater": "^4.6.5",
         "fs-extra": "^10.0.0",
         "pdf-lib": "^1.16.0"
     },
     "build": {
         "appId": "com.dootask.task",
         "artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
+        "asar": true,
         "files": [
             "public/**/*",
             "electron-preload.js",
             "electron.js",
             "utils.js"
         ],
+        "publish": {
+            "provider": "github"
+        },
         "mac": {
             "icon": "../resources/assets/statics/public/images/logo-app.png",
+            "entitlements": "entitlements.mac.plist",
+            "entitlementsInherit": "entitlements.mac.plist",
             "target": [
                 "zip",
                 "dmg",
                 "pkg"
-            ],
-            "publish": [
-                "github"
             ]
         },
         "win": {
@@ -72,9 +75,6 @@
             "target": [
                 "tar.gz",
                 "nsis"
-            ],
-            "publish": [
-                "github"
             ]
         },
         "nsis": {
