@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from "vuex";
+import { mapGetters, mapState } from "vuex";
 import TaskMenu from "./components/TaskMenu";
 
 export default {
@@ -140,7 +140,7 @@ export default {
             let data = [];
             switch (dashboard) {
                 case 'all':
-                    data = this.dashboardTask.all;
+                    data = this.transforTasks(this.dashboardTask.all);
                     break
                 case 'today':
                     data = this.transforTasks(this.dashboardTask.today);
