@@ -79,7 +79,7 @@ export default {
                         return Object.assign({}, data, {
                             id: task.id,
                             parent_id: task.parent_id,
-                            name: task.name,
+                            name: data.name+"_"+task.name,
                             start_at: task.start_at,
                             end_at: task.end_at,
                             complete_at: task.complete_at,
