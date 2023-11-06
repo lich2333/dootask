@@ -970,7 +970,8 @@ class ProjectController extends AbstractController
             $builder->orderBy('project_tasks.' . $column, $direction);
         }
         //
-        $list = $builder->orderByDesc('project_tasks.id')->paginate(Base::getPaginate(200, 100));
+
+        $list = $builder->orderByDesc('project_tasks.id')->paginate(Base::getPaginate(2000, 1000));
         //
         return Base::retSuccess('success', $list);
     }
